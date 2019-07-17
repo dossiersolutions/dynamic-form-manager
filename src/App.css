@@ -22,7 +22,33 @@
 .App-link {
   color: #61dafb;
 }
-
+.form-group {
+  display: block;
+  width: 100%;
+  padding: 20px;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  margin: 10px 15px 0;
+  position: relative;
+}
+.form-group .field-wrapper {
+  width: 45%;
+  display: inline-block;
+  vertical-align: bottom;
+  margin-right: 2%;
+}
+.form-group .remove-field-button {
+  position: absolute;
+  top: 23px;
+  right: 15px;
+}
+.table button {
+  margin-right: 10px;
+}
+.modal-body .add-new-field-wrapper {
+  margin-top: 10px;
+  text-align: right;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
