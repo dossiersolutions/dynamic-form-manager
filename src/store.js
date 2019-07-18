@@ -10,7 +10,16 @@ const reducers = combineReducers({
                 case CREATE_FORM:
                 case UPDATE_FORM:
                     return undefined;
+                default:
+                    return state;
 
+            }
+        },
+        dynamicFormView: (state, action) => {
+            switch (action.type) {
+                case CREATE_FORM:
+                case UPDATE_FORM:
+                    return undefined;
                 default:
                     return state;
 

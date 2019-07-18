@@ -72,7 +72,12 @@ function mapDispatchToProps(dispatch) {
         onRemoveForm(index) {
             dispatch(actions.removeForm(index));
         },
+        onFillForm(form, id) {
+            dispatch(actions.fillForm(form));
+            dispatch(actions.hide(id));
+        }
     }
+
 
 }
 

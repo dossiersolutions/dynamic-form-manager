@@ -7,13 +7,15 @@ export const VIEW_FORM = 'VIEW_FORM';
 export const EDIT_FORM = 'EDIT_FORM';
 export const REMOVE_FORM = 'REMOVE_FORM';
 export const UPDATE_FORM = 'UPDATE_FORM';
+export const FILL_FORM = 'FILL_FORM';
 
 
 const initialState = {
     forms: [],
     form: {},
     update: false,
-    index:''
+    index:'',
+    formData: ''
 };
 
 export const actions = {
@@ -60,6 +62,12 @@ export const actions = {
             type: REMOVE_FORM,
             index
         }
+    },
+    fillForm(form) {
+        return {
+            type:FILL_FORM,
+            form
+        }
     }
 };
 
@@ -79,7 +87,6 @@ export function reducer(state = initialState, action) {
         case UPDATE_FORM:
             const formsConfig = [...state.forms];
             formsConfig[action.index] = action.form.dynamicForm;
-            console.log(formsConfig);
             return {
                 ...state,
                 forms: formsConfig,
@@ -101,6 +108,12 @@ export function reducer(state = initialState, action) {
                 forms,
                 update: false
             };
+        case FILL_FORM:
+            window.alert(`You submitted:\n\n${JSON.stringify(action.form.dynamicFormView.values, null, 2)}`);
+            return {
+                ...state,
+                update: false
+            }
         default:
             return state;
 

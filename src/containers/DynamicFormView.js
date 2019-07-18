@@ -2,33 +2,43 @@ import React from 'react';
 import {Form, Field, FieldArray, reduxForm } from 'redux-form';
 import {Button, Col, Container, Modal, Row} from "react-bootstrap";
 import {Text} from "../components";
+import {connect} from "react-redux";
+import {toggleId} from "../App";
 
 
 const DynamicFormView = props => {
-    console.log(props.form);
-    const {handleSubmit, pristine, reset, submitting } = props;
+    const {handleSubmit, pristine, reset, submitting, initialValues} = props;
+    console.log(initialValues);
     return (
         <React.Fragment>
+            <div>{initialValues.formName}</div>
             <Form onSubmit={handleSubmit}>
                 <Modal.Body>
-                    <Field
-                        name="formName"
-                        type="text"
-                        component={Text}
-                        placeholder="Form Name"
-                    />
-                    {/*<FieldArray name="fields" component={addFields} />*/}
+                    {initialValues.fields.map((field, index) => {
+                        return (
+                            <Field name={`field_`+index} type='text' component={Text} label={field.title} className="form-control" />
+                        );
+                    })}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button as="input" type="submit" disabled={submitting} variant="info" value='Save' />
-                    <Button type="button" disabled={pristine || submitting} onClick={reset} variant="info" value='Reset' />
+                    <Button as="input" type="submit" disabled={submitting} variant="info" value='Save'/>
+                    <Button type="button" disabled={pristine || submitting} onClick={reset} variant="info">
+                        Reset
+                    </Button>
                 </Modal.Footer>
             </Form>
         </React.Fragment>
-    )
+    );
 };
 
+function mapStateToProps(state) {
+    const initValues = state.appReducer.form ? state.appReducer.form.values : {};
+    return {
+        initialValues: initValues
+    };
+}
 
-export default reduxForm({
-    form: 'view',
-})(DynamicFormView);
+export default connect(mapStateToProps)(reduxForm({
+    form: 'dynamicFormView',
+    enableReinitialize: true
+})(DynamicFormView));

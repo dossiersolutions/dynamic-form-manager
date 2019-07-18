@@ -69,10 +69,6 @@ const DynamicForm = props => {
     );
 };
 
-// const mapStateToProps = (state, props) => ({
-//     initialValues: {formName: 'tessssssssttttaaaaaa'}, // retrieve name from redux store
-// })
-
 function mapStateToProps(state, props) {
     const initValues = state.appReducer.form ? state.appReducer.form.values : {};
     return {
