@@ -4,6 +4,14 @@ import {Text, Select} from '../components';
 import {Button, Col, Modal, Row} from "react-bootstrap";
 import {connect} from "react-redux";
 
+const validate = values => {
+    const errors = {}
+    if(!values.formName) {
+        errors.formName = 'Form name is required!';
+    }
+    return errors;
+}
+
 const addFields = ({fields, meta: {touched, error, submitFailed}}) => (
     <React.Fragment>
         <Row>
@@ -82,7 +90,8 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps)(reduxForm({
     form: 'dynamicForm',
-    enableReinitialize: true
+    enableReinitialize: true,
+    validate
 })(DynamicForm));
 
 

@@ -7,6 +7,7 @@ import {connect} from "react-redux";
 
 const DynamicFormView = props => {
     const {handleSubmit, pristine, reset, submitting, initialValues, result} = props;
+    console.log(initialValues);
     return (
         <React.Fragment>
             <Modal.Header closeButton >
