@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {Container, Row, Col, Button} from "react-bootstrap";
-import { actions } from "./actions";
+import {actions, CREATE_FORM, FILL_FORM, UPDATE_FORM, formModal, formViewModal} from "./actions";
 import './App.css';
 import FormsList from "./components/FormsList";
-import {Toggle} from "./containers/Toggle";
-import {AppModal} from "./components/Modal";
+import {FormModal} from "./components/Modal";
 import DynamicForm from "./containers/DynamicForm";
-
-export const toggleId = 'SHOW_FORM_MODAL';
+import DynamicFormView from "./containers/DynamicFormView";
 
 class App extends Component {
     render() {
@@ -16,65 +14,79 @@ class App extends Component {
             <Container>
                 <Row style={{padding: 15}}>
                     <Col><h2 style={{fontWeight: 'bold'}}>Form manager</h2></Col>
-                    <Col className="text-right"><Button type='button' onClick={() => this.props.onShow(toggleId)}>Create new form +</Button></Col>
-                    <Toggle id={toggleId}>
-                        <AppModal onClick={() => this.props.onHide(toggleId)} >
-                            <DynamicForm
-                                onSubmit={
-                                    () => this.props.update
-                                    ? this.props.onUpdateForm(this.props.form,this.props.index, toggleId) : this.props.onSubmitForm(this.props.form, toggleId)
-                                }
-                            />
-                        </AppModal>
-                    </Toggle>
+                    <Col className="text-right">
+                        <Button
+                            type='button'
+                            variant='success'
+                            onClick={() => this.props.onShow(formModal, CREATE_FORM)}
+                        >
+                            Create new form +
+                        </Button>
+                    </Col>
                 </Row>
-                <FormsList app = {this.props} />
+                <FormsList actions={this.props} />
+                <FormModal onClick={() => this.props.onHide(formModal)} id={formModal} >
+                    <DynamicForm
+                        onSubmit={() => this.props.onSubmitForm(this.props.form, this.props.formAction, formModal, this.props.index)}
+                    />
+                </FormModal>
+                <FormModal onClick={() => this.props.onHide(formViewModal)} id={formViewModal} >
+                    <DynamicFormView
+                        onSubmit={() => this.props.onSubmitForm(this.props.form, this.props.formAction, formViewModal)}
+                    />
+                </FormModal>
+
             </Container>
         );
     }
 }
 
 function mapStateToProps(state) {
-
     return {
         form: state.form,
         forms: state.appReducer.forms,
         initialFormValues: state.appReducer.form,
-        update: state.appReducer.update,
-        index: state.appReducer.index
+        index: state.appReducer.index,
+        formAction: state.appReducer.formAction
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        onShow(id) {
-            dispatch(actions.show(id))
+        onShow(id, formAction) {
+            dispatch(actions.show(id, formAction))
         },
         onHide(id) {
             dispatch(actions.hide(id))
         },
-        onSubmitForm(form, id) {
-            dispatch(actions.createForm(form));
-            dispatch(actions.hide(id));
+        onSubmitForm(form, action, id, index) {
+            switch(action) {
+                case CREATE_FORM:
+                    dispatch(actions.createForm(form));
+                    dispatch(actions.hide(id));
+                    break;
+                case UPDATE_FORM:
+                    dispatch(actions.updateForm(form, index));
+                    dispatch(actions.hide(id));
+                    break;
+                case FILL_FORM:
+                    dispatch(actions.fillForm(form));
+                    break;
+                default:
+                    dispatch(actions.hide(id));
+            }
+
         },
-        onUpdateForm(form, index, id) {
-            dispatch(actions.updateForm(form, index));
-            dispatch(actions.hide(id));
-        },
-        onViewForm(index, id) {
+        onViewForm(index, id, formAction) {
             dispatch(actions.viewForm(index));
-            dispatch(actions.show(id));
+            dispatch(actions.show(id, formAction));
         },
-        onEditForm(index, id) {
+        onEditForm(index, id, formAction) {
             dispatch(actions.editForm(index));
-            dispatch(actions.show(id));
+            dispatch(actions.show(id, formAction));
         },
         onRemoveForm(index) {
             dispatch(actions.removeForm(index));
-        },
-        onFillForm(form, id) {
-            dispatch(actions.fillForm(form));
-            dispatch(actions.hide(id));
         }
     }
 

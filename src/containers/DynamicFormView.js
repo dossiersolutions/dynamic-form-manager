@@ -6,7 +6,7 @@ import {connect} from "react-redux";
 
 
 const DynamicFormView = props => {
-    const {handleSubmit, pristine, reset, submitting, initialValues} = props;
+    const {handleSubmit, pristine, reset, submitting, initialValues, result} = props;
     return (
         <React.Fragment>
             <Modal.Header closeButton >
@@ -14,9 +14,12 @@ const DynamicFormView = props => {
             </Modal.Header>
             <Form onSubmit={handleSubmit}>
                 <Modal.Body>
-                    {initialValues.fields.map((field, index) => {
+
+                    {result ?
+                        `Form submit result: ${result}`
+                        : initialValues.fields.map((field, index) => {
                         return (
-                            <Field name={`field_`+index} type='text' component={Text} label={field.title} className="form-control" />
+                            <Field key={index} name={`field_`+index} type='text' component={Text} label={field.title} className="form-control" />
                         );
                     })}
                 </Modal.Body>
@@ -32,9 +35,10 @@ const DynamicFormView = props => {
 };
 
 function mapStateToProps(state) {
-    const initValues = state.appReducer.form ? state.appReducer.form.values : {};
+    const initValues = state.appReducer.form.values ? state.appReducer.form.values : {formName:'', fields:[]};
     return {
-        initialValues: initValues
+        initialValues: initValues,
+        result: state.appReducer.result
     };
 }
 

@@ -1,7 +1,6 @@
-
-
 const SHOW = 'SHOW';
 const HIDE = 'HIDE';
+
 export const CREATE_FORM = 'CREATE_FORM';
 export const VIEW_FORM = 'VIEW_FORM';
 export const EDIT_FORM = 'EDIT_FORM';
@@ -9,26 +8,29 @@ export const REMOVE_FORM = 'REMOVE_FORM';
 export const UPDATE_FORM = 'UPDATE_FORM';
 export const FILL_FORM = 'FILL_FORM';
 
+export const formModal = 'SHOW_FORM_MODAL';
+export const formViewModal = 'SHOW_FORM_VIEW_MODAL';
+
 
 const initialState = {
     forms: [],
-    form: {},
-    update: false,
+    form:{},
     index:'',
-    formData: ''
+    formAction:'',
+    result: ''
 };
 
 export const actions = {
-    show(id) {
+    show(id, formAction) {
         return {
             type : SHOW,
-            payload: id
+            payload: {id, formAction}
         }
     },
     hide(id) {
         return {
             type: HIDE,
-            payload: id
+            payload: {id}
         }
     },
     createForm(form) {
@@ -51,7 +53,6 @@ export const actions = {
         }
     },
     editForm(index) {
-
         return {
             type:EDIT_FORM,
             index
@@ -75,45 +76,47 @@ export const actions = {
 export function reducer(state = initialState, action) {
     switch (action.type) {
         case SHOW:
-            return {...state, [action.payload]: true};
+            return {...state,
+                [action.payload.id]: true,
+                formAction: action.payload.formAction
+            };
         case HIDE:
-            return {...state, [action.payload]: false};
+            return {...state,
+                [action.payload.id]: false,
+                form: {},
+                result:''
+            };
         case CREATE_FORM:
             return {
                 ...state,
-                forms: [...state.forms, action.form.dynamicForm],
-                update: false
+                forms: [...state.forms, action.form.dynamicForm]
             };
         case UPDATE_FORM:
             const formsConfig = [...state.forms];
             formsConfig[action.index] = action.form.dynamicForm;
             return {
                 ...state,
-                forms: formsConfig,
-                update: true,
-                form:{}
+                forms: formsConfig
             };
         case VIEW_FORM:
         case EDIT_FORM:
             const formsArr = [...state.forms];
             const form = formsArr[action.index];
             return {
-                ...state, form , update: true, index:action.index
+                ...state, form , index:action.index
             };
         case REMOVE_FORM:
             const forms = [...state.forms];
             forms.splice(action.index, 1);
             return {
                 ...state,
-                forms,
-                update: false
+                forms
             };
         case FILL_FORM:
-            window.alert(`You submitted:\n\n${JSON.stringify(action.form.dynamicFormView.values, null, 2)}`);
             return {
                 ...state,
-                update: false
-            }
+                result: JSON.stringify(action.form.dynamicFormView.values, null, 2)
+            };
         default:
             return state;
 

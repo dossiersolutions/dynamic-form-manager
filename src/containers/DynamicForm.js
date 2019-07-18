@@ -1,7 +1,7 @@
 import React from 'react';
 import {Form, Field, FieldArray, reduxForm} from 'redux-form';
 import {Text, Select} from '../components';
-import {Button, Col, Container, Modal, Row} from "react-bootstrap";
+import {Button, Col, Modal, Row} from "react-bootstrap";
 import {connect} from "react-redux";
 
 const addFields = ({fields, meta: {touched, error, submitFailed}}) => (
@@ -43,7 +43,6 @@ const addFields = ({fields, meta: {touched, error, submitFailed}}) => (
 );
 
 const DynamicForm = props => {
-    console.log(props);
     const {handleSubmit, pristine, reset, submitting, initialValues} = props;
     const modalTitle = initialValues ? `Edit Form - ` + initialValues.formName : 'Create Form';
     return (

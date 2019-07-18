@@ -1,15 +1,9 @@
 import React from 'react';
-import {Button, Col, Container, Row} from "react-bootstrap";
-import {toggleId} from "../App";
-import {AppModal} from "./Modal";
-import DynamicForm from "../containers/DynamicForm";
-import {Toggle} from "../containers/Toggle";
-import DynamicFormView from "../containers/DynamicFormView";
+import {Button} from "react-bootstrap";
+import {FILL_FORM, UPDATE_FORM, formModal, formViewModal} from "../actions";
 
 
-const viewFormToggleId = 'SHOW_FORM_VIEW_MODAL';
 const FormsList = (props) => {
-
     return (
         <React.Fragment>
           <table className='table table-striped text-center table-sm table-bordered'>
@@ -20,27 +14,20 @@ const FormsList = (props) => {
                 </tr>
               </thead>
               <tbody>
-              {props.app.forms.map((form, index) => {
+              {props.actions.forms.map((form, index) => {
                   return (
                       <tr key={index}>
                           <td>{form.values.formName}</td>
                           <td >
-                              <Button type='button' onClick={() => props.app.onViewForm(index, viewFormToggleId)} >View</Button>
-                              <Button type='button' onClick={() => props.app.onEditForm(index, toggleId)}>Edit</Button>
-                              <Button type='button' onClick={() => props.app.onRemoveForm(index)} variant='danger'>Delete</Button>
+                              <Button type='button' onClick={() => props.actions.onViewForm(index, formViewModal, FILL_FORM)} >View</Button>
+                              <Button type='button' onClick={() => props.actions.onEditForm(index,formModal, UPDATE_FORM)} >Edit</Button>
+                              <Button type='button' onClick={() => props.actions.onRemoveForm(index)} variant='danger'>Delete</Button>
                           </td>
                       </tr>
                   );
               })}
               </tbody>
           </table>
-            <Toggle id={viewFormToggleId}>
-                <AppModal onClick={() => props.app.onHide(viewFormToggleId)} >
-                    <DynamicFormView
-                        onSubmit={() => props.app.onFillForm(props.app.form, viewFormToggleId)}
-                    />
-                </AppModal>
-            </Toggle>
         </React.Fragment>
     );
 };
