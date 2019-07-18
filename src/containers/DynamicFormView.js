@@ -1,17 +1,17 @@
 import React from 'react';
-import {Form, Field, FieldArray, reduxForm } from 'redux-form';
-import {Button, Col, Container, Modal, Row} from "react-bootstrap";
+import {Form, Field, reduxForm } from 'redux-form';
+import {Button, Modal} from "react-bootstrap";
 import {Text} from "../components";
 import {connect} from "react-redux";
-import {toggleId} from "../App";
 
 
 const DynamicFormView = props => {
     const {handleSubmit, pristine, reset, submitting, initialValues} = props;
-    console.log(initialValues);
     return (
         <React.Fragment>
-            <div>{initialValues.formName}</div>
+            <Modal.Header closeButton >
+                <Modal.Title>{initialValues.formName}</Modal.Title>
+            </Modal.Header>
             <Form onSubmit={handleSubmit}>
                 <Modal.Body>
                     {initialValues.fields.map((field, index) => {

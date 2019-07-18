@@ -8,9 +8,6 @@ export const AppModal =  ({children, onClick}) => {
     return (ReactDom.createPortal(
         <>
         <Modal show={true} onHide={onClick}>
-            <Modal.Header closeButton >
-                <Modal.Title>Form</Modal.Title>
-            </Modal.Header>
             {children}
         </Modal></>,
         document.getElementById('modal-root')

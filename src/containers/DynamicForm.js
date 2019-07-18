@@ -43,9 +43,14 @@ const addFields = ({fields, meta: {touched, error, submitFailed}}) => (
 );
 
 const DynamicForm = props => {
-    const {handleSubmit, pristine, reset, submitting} = props;
+    console.log(props);
+    const {handleSubmit, pristine, reset, submitting, initialValues} = props;
+    const modalTitle = initialValues ? `Edit Form - ` + initialValues.formName : 'Create Form';
     return (
         <React.Fragment>
+            <Modal.Header closeButton >
+                <Modal.Title>{modalTitle}</Modal.Title>
+            </Modal.Header>
             <Form onSubmit={handleSubmit}>
                 <Modal.Body>
                     <Field
@@ -69,7 +74,7 @@ const DynamicForm = props => {
     );
 };
 
-function mapStateToProps(state, props) {
+function mapStateToProps(state) {
     const initValues = state.appReducer.form ? state.appReducer.form.values : {};
     return {
         initialValues: initValues
