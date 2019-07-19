@@ -17,7 +17,7 @@ const initialState = {
     form:{},
     index:'',
     formAction:'',
-    result: ''
+    submittedData: ''
 };
 
 export const actions = {
@@ -84,7 +84,7 @@ export function reducer(state = initialState, action) {
             return {...state,
                 [action.payload.id]: false,
                 form: {},
-                result:''
+                submittedData:''
             };
         case CREATE_FORM:
             return {
@@ -115,7 +115,7 @@ export function reducer(state = initialState, action) {
         case FILL_FORM:
             return {
                 ...state,
-                result: JSON.stringify(action.form.dynamicFormView.values, null, 2)
+                submittedData: JSON.stringify(action.form.dynamicFormView.values, null, 2)
             };
         default:
             return state;

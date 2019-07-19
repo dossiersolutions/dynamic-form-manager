@@ -3,24 +3,30 @@ import {Form, Field, reduxForm } from 'redux-form';
 import {Button, Modal} from "react-bootstrap";
 import {Text} from "../components";
 import {connect} from "react-redux";
+import {SubmittedData} from "../components/SubmittedData";
 
 
 const DynamicFormView = props => {
-    const {handleSubmit, pristine, reset, submitting, initialValues, result} = props;
-    console.log(initialValues);
+    const {handleSubmit, pristine, reset, submitting, initialValues, submittedData} = props;
+
     return (
+        submittedData ? <SubmittedData formName={initialValues.formName} data = {submittedData} /> :
         <React.Fragment>
             <Modal.Header closeButton >
                 <Modal.Title>{initialValues.formName}</Modal.Title>
             </Modal.Header>
             <Form onSubmit={handleSubmit}>
                 <Modal.Body>
-
-                    {result ?
-                        `Form submit result: ${result}`
-                        : initialValues.fields.map((field, index) => {
+                    {initialValues.fields.map((field, index) => {
                         return (
-                            <Field key={index} name={`field_`+index} type='text' component={Text} label={field.title} className="form-control" />
+                            <Field
+                                key={index}
+                                name={`field_${index}`}
+                                type='text'
+                                component={Text}
+                                label={field.title}
+                                className="form-control"
+                            />
                         );
                     })}
                 </Modal.Body>
@@ -39,7 +45,7 @@ function mapStateToProps(state) {
     const initValues = state.appReducer.form.values ? state.appReducer.form.values : {formName:'', fields:[]};
     return {
         initialValues: initValues,
-        result: state.appReducer.result
+        submittedData: state.appReducer.submittedData
     };
 }
 
