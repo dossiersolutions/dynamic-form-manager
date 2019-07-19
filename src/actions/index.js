@@ -1,3 +1,5 @@
+import { fromJS, Map, List } from 'immutable';
+
 const SHOW = 'SHOW';
 const HIDE = 'HIDE';
 
@@ -13,8 +15,8 @@ export const formViewModal = 'SHOW_FORM_VIEW_MODAL';
 
 
 const initialState = {
-    forms: [],
-    form:{},
+    forms: List([]),
+    form: Map({}),
     index:'',
     formAction:'',
     submittedData: ''
@@ -74,51 +76,35 @@ export const actions = {
 
 
 export function reducer(state = initialState, action) {
+    let im_state = Map(state);
     switch (action.type) {
         case SHOW:
-            return {...state,
-                [action.payload.id]: true,
-                formAction: action.payload.formAction
-            };
+            return im_state.set(action.payload.id, true)
+                .set('formAction', action.payload.formAction);
         case HIDE:
-            return {...state,
-                [action.payload.id]: false,
-                form: {},
-                submittedData:''
-            };
+            return im_state.set(action.payload.id, false)
+                .set('form', Map({}))
+                .set('submittedData', '');
+
         case CREATE_FORM:
-            return {
-                ...state,
-                forms: [...state.forms, action.form.dynamicForm]
-            };
+            return im_state.updateIn(
+                ['forms'], dynamicForms => List(dynamicForms).push(fromJS(action.form.dynamicForm))
+            );
+
         case UPDATE_FORM:
-            const formsConfig = [...state.forms];
-            formsConfig[action.index] = action.form.dynamicForm;
-            return {
-                ...state,
-                forms: formsConfig
-            };
+            return im_state.setIn(['forms', action.index],fromJS(action.form.dynamicForm));
+
         case VIEW_FORM:
         case EDIT_FORM:
-            const formsArr = [...state.forms];
-            const form = formsArr[action.index];
-            return {
-                ...state, form , index:action.index
-            };
+            return im_state
+                .set('form', im_state.getIn(['forms', action.index]))
+                .set('index', action.index);
         case REMOVE_FORM:
-            const forms = [...state.forms];
-            forms.splice(action.index, 1);
-            return {
-                ...state,
-                forms
-            };
+            return im_state.deleteIn(['forms', action.index]);
         case FILL_FORM:
-            return {
-                ...state,
-                submittedData: JSON.stringify(action.form.dynamicFormView.values, null, 2)
-            };
+            return im_state.set('submittedData', JSON.stringify(action.form.dynamicFormView.values, null, 2));
         default:
-            return state;
+            return im_state;
 
     }
 }

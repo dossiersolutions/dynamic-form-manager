@@ -1,5 +1,6 @@
-import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
-import { reducer as reduxFormReducer } from 'redux-form';
+import { createStore, applyMiddleware, compose } from 'redux';
+import {combineReducers} from 'redux-immutable'
+import { reducer as reduxFormReducer } from 'redux-form/immutable';
 import {reducer, CREATE_FORM, UPDATE_FORM} from './actions'
 import logger from 'redux-logger';
 

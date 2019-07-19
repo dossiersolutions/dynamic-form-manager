@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Field, reduxForm } from 'redux-form';
+import {Form, Field, reduxForm } from 'redux-form/immutable';
 import {Button, Modal} from "react-bootstrap";
 import {Text} from "../components";
 import {connect} from "react-redux";
@@ -8,16 +8,16 @@ import {SubmittedData} from "../components/SubmittedData";
 
 const DynamicFormView = props => {
     const {handleSubmit, pristine, reset, submitting, initialValues, submittedData} = props;
-
+    const initialValuesJS = initialValues.toJS();
     return (
-        submittedData ? <SubmittedData formName={initialValues.formName} data = {submittedData} /> :
+        submittedData ? <SubmittedData formName={initialValuesJS.formName} data = {submittedData} /> :
         <React.Fragment>
             <Modal.Header closeButton >
-                <Modal.Title>{initialValues.formName}</Modal.Title>
+                <Modal.Title>{initialValuesJS.formName}</Modal.Title>
             </Modal.Header>
             <Form onSubmit={handleSubmit}>
                 <Modal.Body>
-                    {initialValues.fields.map((field, index) => {
+                    {initialValuesJS.fields.map((field, index) => {
                         return (
                             <Field
                                 key={index}
@@ -42,10 +42,11 @@ const DynamicFormView = props => {
 };
 
 function mapStateToProps(state) {
-    const initValues = state.appReducer.form.values ? state.appReducer.form.values : {formName:'', fields:[]};
+    const initValues = state.getIn(['appReducer', 'form', 'values'])
+        ? state.getIn(['appReducer', 'form', 'values']).toJS() : {formName:'', fields:[]};
     return {
         initialValues: initValues,
-        submittedData: state.appReducer.submittedData
+        submittedData: state.getIn(['appReducer', 'submittedData'])
     };
 }
 

@@ -43,11 +43,11 @@ class App extends Component {
 
 function mapStateToProps(state) {
     return {
-        form: state.form,
-        forms: state.appReducer.forms,
-        initialFormValues: state.appReducer.form,
-        index: state.appReducer.index,
-        formAction: state.appReducer.formAction
+        form: state.get('form').toJS(),
+        forms: state.getIn(['appReducer', 'forms']).toJS(),
+        initialFormValues: state.getIn(['appReducer','form']).toJS(),
+        index: state.getIn(['appReducer','index']),
+        formAction: state.getIn(['appReducer','formAction'])
     };
 }
 

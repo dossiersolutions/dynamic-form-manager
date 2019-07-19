@@ -1,12 +1,13 @@
 import React from 'react';
-import {Form, Field, FieldArray, reduxForm} from 'redux-form';
+import {Form, Field, FieldArray, reduxForm} from 'redux-form/immutable';
 import {Text, Select} from '../components';
 import {Button, Col, Modal, Row} from "react-bootstrap";
 import {connect} from "react-redux";
+import {Map} from 'immutable';
 
 const validate = values => {
     const errors = {}
-    if(!values.formName) {
+    if(!values.get('formName')) {
         errors.formName = 'Form name is required!';
     }
     return errors;
@@ -43,7 +44,7 @@ const addFields = ({fields, meta: {touched, error, submitFailed}}) => (
         </Row>
         <Row>
             <Col className="add-new-field-wrapper">
-                <Button type='button' onClick={() => fields.push({})} variant="info">Add form field +</Button>
+                <Button type='button' onClick={() => fields.push(Map({}))} variant="info">Add form field +</Button>
                 {(touched || submitFailed) && error && <span>{error}</span>}
             </Col>
         </Row>
@@ -82,7 +83,7 @@ const DynamicForm = props => {
 };
 
 function mapStateToProps(state) {
-    const initValues = state.appReducer.form ? state.appReducer.form.values : {};
+    const initValues = state.getIn(['appReducer', 'form', 'values']) ? state.getIn(['appReducer', 'form', 'values']).toJS() : {};
     return {
         initialValues: initValues
     };

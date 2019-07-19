@@ -1,5 +1,5 @@
 import React from 'react';
-import { Field } from "redux-form";
+import { Field } from "redux-form/immutable";
 
 const SelectComponent = ({ input, meta: {touched, error} }) => (
     <div className="field-wrapper">
